@@ -32,13 +32,22 @@ class RuleOfThirds extends React.Component {
         x4Perc: [],
         y4Perc: [],
         logo: [],
+        height:[],
+        width:[],
     };
+    this.imageRef = React.createRef()
+    this.onImgLoad = this.onImgLoad.bind(this);
     }
 
     handleDownload = e => {
         this.setState({
             downloadvalue : e.target.value
         });
+    }
+
+    
+    onImgLoad = ({target: img}) => {
+       this.setState({height: img.offsetHeight, width: img.offsetWidth})
     }
 
     handleView = f => {
@@ -66,6 +75,9 @@ class RuleOfThirds extends React.Component {
         this.setState({base64: base64, imageProps: file});
         this.apiRequest();
     }
+    pythagorean(sideA, sideB) {
+        return Math.sqrt(Math.pow(sideA, 2) + Math.pow(sideB, 2));
+    }
 
     apiRequest() {      
         const req = new vision.Request({
@@ -78,7 +90,7 @@ class RuleOfThirds extends React.Component {
         vision.annotate(req)
         .then((res) => {
             var object = res.responses[0].logoAnnotations[0].boundingPoly.vertices;
-            console.log(object)
+
             var x1object = object[0].x;
             var y1object = object[1].y;
             var x2object = object[1].x;
@@ -87,6 +99,7 @@ class RuleOfThirds extends React.Component {
             var objecty = (y2object - y1object )
             console.log("breedte is" + objectx)
             console.log("hoogte is" + objecty)
+            console.log(this.pythagorean(this.state.height - objecty - y1object, x1object ))
 
             const width =  objectx;
             const height =  objecty;
@@ -98,36 +111,20 @@ class RuleOfThirds extends React.Component {
                 // objecty : objecty,
                 })
 
-            this.gridDot();
-            this.setDistance();
+ 
 
         }, (e) => {
         alert("foutje")
         });
     }
 
-    gridDot() {
-        this.setState({
-
-
-        });
-    }
-
-    setDistance() {
-        this.setState({
-
-        })
-    }
-
-
-
 render() {
-    
+    console.log()
 return (
 <div className="rule-of-thirds">
     <div className="rule-of-thirds__image">
             {this.state.logo}
-        <img ref={this.dimensions} src={this.state.base64} alt="afbeelding" />
+        <img ref={this.dimensions} onLoad={this.onImgLoad} src={this.state.base64} alt="afbeelding" />
     </div>
 
     <button onClick={this.handleSubmit}>Save</button>
