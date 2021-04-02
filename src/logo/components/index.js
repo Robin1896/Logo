@@ -12,9 +12,6 @@ class RuleOfThirds extends React.Component {
     this.dimensions = React.createRef()
     this.state = {
         object : [],
-        objectx: [],
-        objecty: [],
-        logo: [],
         height:[],
         width:[],
         distanceLeftBottom:[],
