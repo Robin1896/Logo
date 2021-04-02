@@ -1,4 +1,3 @@
-import { yellow } from '@material-ui/core/colors';
 import React from 'react';
 import '../styles/main.scss';
 // import fire from './fire';
