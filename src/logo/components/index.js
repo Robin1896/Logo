@@ -34,6 +34,7 @@ class RuleOfThirds extends React.Component {
         logo: [],
         height:[],
         width:[],
+        afstandLinksOnder:[],
     };
     this.imageRef = React.createRef()
     this.onImgLoad = this.onImgLoad.bind(this);
@@ -99,16 +100,24 @@ class RuleOfThirds extends React.Component {
             var objecty = (y2object - y1object )
             console.log("breedte is" + objectx)
             console.log("hoogte is" + objecty)
-            console.log(this.pythagorean(this.state.height - objecty - y1object, x1object ))
-
+            console.log()
+            const afstandLinksOnder = this.pythagorean(this.state.height - objecty - y1object, x1object )
             const width =  objectx;
             const height =  objecty;
-
+            console.log(this.state.width)
+            console.log(this.state.height)
+            console.log("afstandtotlinksonder" + afstandLinksOnder)
+            console.log("hoogte is" + (this.state.height - objecty - y1object))
+            const hoogte = this.state.height - objecty - y1object;
+            const breedte = x1object;
+            const breedtePerc = Math.pow((breedte/this.state.width)*100, 2)
+            const hoogtePerc = Math.pow((hoogte/this.state.width)*100, 2)
+            console.log(Math.sqrt(breedtePerc + hoogtePerc ));
             const logo = <div style={{ borderStyle:"solid",  borderColor:"yellow", zIndex:10, height: height, width:width, position:"absolute", left: x1object, top:y1object}}></div>;
 
             this.setState({
                 logo : logo,
-                // objecty : objecty,
+                afstandLinksOnder : afstandLinksOnder,
                 })
 
  
@@ -125,6 +134,7 @@ return (
     <div className="rule-of-thirds__image">
             {this.state.logo}
         <img ref={this.dimensions} onLoad={this.onImgLoad} src={this.state.base64} alt="afbeelding" />
+        {"afstand tot linksonder tot logo:" }{this.state.afstandLinksOnder} PX
     </div>
 
     <button onClick={this.handleSubmit}>Save</button>
