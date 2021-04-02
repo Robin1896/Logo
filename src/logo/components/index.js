@@ -34,7 +34,7 @@ class RuleOfThirds extends React.Component {
         logo: [],
         height:[],
         width:[],
-        afstandLinksOnder:[],
+        distanceLeftBottom:[],
     };
     this.imageRef = React.createRef()
     this.onImgLoad = this.onImgLoad.bind(this);
@@ -91,36 +91,25 @@ class RuleOfThirds extends React.Component {
         vision.annotate(req)
         .then((res) => {
             var object = res.responses[0].logoAnnotations[0].boundingPoly.vertices;
-
             var x1object = object[0].x;
             var y1object = object[1].y;
             var x2object = object[1].x;
             var y2object = object[2].y;
             var objectx = (x2object - x1object)
             var objecty = (y2object - y1object )
-            console.log("breedte is" + objectx)
-            console.log("hoogte is" + objecty)
-            console.log()
-            const afstandLinksOnder = this.pythagorean(this.state.height - objecty - y1object, x1object )
             const width =  objectx;
             const height =  objecty;
-            console.log(this.state.width)
-            console.log(this.state.height)
-            console.log("afstandtotlinksonder" + afstandLinksOnder)
-            console.log("hoogte is" + (this.state.height - objecty - y1object))
-            const hoogte = this.state.height - objecty - y1object;
-            const breedte = x1object;
-            const breedtePerc = Math.pow((breedte/this.state.width)*100, 2)
-            const hoogtePerc = Math.pow((hoogte/this.state.width)*100, 2)
-            console.log(Math.sqrt(breedtePerc + hoogtePerc ));
+            const imgHeight = this.state.height - objecty - y1object;
+            const imgWidth = x1object;
+            const distanceX = Math.pow((imgWidth/this.state.width)*100, 2)
+            const distanceY = Math.pow((imgHeight/this.state.width)*100, 2)
+            const distanceLeftBottomPerc = 100-(Math.sqrt(distanceX + distanceY ));
             const logo = <div style={{ borderStyle:"solid",  borderColor:"yellow", zIndex:10, height: height, width:width, position:"absolute", left: x1object, top:y1object}}></div>;
 
             this.setState({
                 logo : logo,
-                afstandLinksOnder : afstandLinksOnder,
+                distanceLeftBottom : distanceLeftBottomPerc,
                 })
-
- 
 
         }, (e) => {
         alert("foutje")
@@ -134,7 +123,7 @@ return (
     <div className="rule-of-thirds__image">
             {this.state.logo}
         <img ref={this.dimensions} onLoad={this.onImgLoad} src={this.state.base64} alt="afbeelding" />
-        {"afstand tot linksonder tot logo:" }{this.state.afstandLinksOnder} PX
+        {"afstand tot linksonder tot logo:" }{this.state.distanceLeftBottom} %
     </div>
 
     <button onClick={this.handleSubmit}>Save</button>
