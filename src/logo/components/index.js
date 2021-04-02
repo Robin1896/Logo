@@ -12,24 +12,8 @@ class RuleOfThirds extends React.Component {
     this.dimensions = React.createRef()
     this.state = {
         object : [],
-        x1:[],
-        y1: [],
-        x2:[],
-        y2: [],
-        x3:[],
-        y3: [],
-        x4:[],
-        y4: [],
         objectx: [],
         objecty: [],
-        x1Perc: [],
-        y1Perc: [],
-        x2Perc: [],
-        y2Perc: [],
-        x3Perc: [],
-        y3Perc: [],
-        x4Perc: [],
-        y4Perc: [],
         logo: [],
         height:[],
         width:[],
@@ -39,21 +23,8 @@ class RuleOfThirds extends React.Component {
     this.onImgLoad = this.onImgLoad.bind(this);
     }
 
-    handleDownload = e => {
-        this.setState({
-            downloadvalue : e.target.value
-        });
-    }
-
-    
     onImgLoad = ({target: img}) => {
        this.setState({height: img.offsetHeight, width: img.offsetWidth})
-    }
-
-    handleView = f => {
-        this.setState({
-            viewvalue : f.target.value
-        });
     }
 
     convertBase64 = (file) => {
@@ -75,9 +46,6 @@ class RuleOfThirds extends React.Component {
         this.setState({base64: base64, imageProps: file});
         this.apiRequest();
     }
-    pythagorean(sideA, sideB) {
-        return Math.sqrt(Math.pow(sideA, 2) + Math.pow(sideB, 2));
-    }
 
     apiRequest() {      
         const req = new vision.Request({
@@ -92,21 +60,15 @@ class RuleOfThirds extends React.Component {
             var object = res.responses[0].logoAnnotations[0].boundingPoly.vertices;
             var x1object = object[0].x;
             var y1object = object[1].y;
-            var x2object = object[1].x;
             var y2object = object[2].y;
-            var objectx = (x2object - x1object)
             var objecty = (y2object - y1object )
-            const width =  objectx;
-            const height =  objecty;
-            const imgHeight = this.state.height - objecty - y1object;
-            const imgWidth = x1object;
-            const distanceX = Math.pow((imgWidth/this.state.width)*100, 2)
-            const distanceY = Math.pow((imgHeight/this.state.width)*100, 2)
-            const distanceLeftBottomPerc = 100-(Math.sqrt(distanceX + distanceY ));
-            const logo = <div style={{ borderStyle:"solid",  borderColor:"yellow", zIndex:10, height: height, width:width, position:"absolute", left: x1object, top:y1object}}></div>;
+            const distanceY = this.state.height - objecty - y1object;
+            const distanceX = x1object;
+            const distanceLeftBottomPerc = 100-(Math.sqrt(Math.pow((distanceX/this.state.width)*100, 2) + Math.pow((distanceY/this.state.width)*100, 2) ));
+            // const logo = <div style={{ borderStyle:"solid",  borderColor:"yellow", zIndex:10, height: height, width:width, position:"absolute", left: x1object, top:y1object}}></div>;
 
             this.setState({
-                logo : logo,
+                // logo : logo,
                 distanceLeftBottom : distanceLeftBottomPerc,
                 })
 
